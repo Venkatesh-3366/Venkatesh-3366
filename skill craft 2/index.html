@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stopwatch</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="stopwatch">
+        <div id="display">00:00:00</div>
+        <div class="controls">
+            <button id="start">Start</button>
+            <button id="stop">Stop</button>
+            <button id="reset">Reset</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+    <script>
+        let startTime, updatedTime, difference, tInterval, running = false;
+        let hours = 0,
+            minutes = 0,
+            seconds = 0;
+
+        const display = document.getElementById('display');
+        const startButton = document.getElementById('start');
+        const stopButton = document.getElementById('stop');
+        const resetButton = document.getElementById('reset');
+
+        function startTimer() {
+            if (!running) {
+                startTime = new Date().getTime();
+                tInterval = setInterval(getShowTime, 1);
+                running = true;
+                startButton.disabled = true;
+                stopButton.disabled = false;
+                resetButton.disabled = true;
+            }
+        }
+
+        function stopTimer() {
+            clearInterval(tInterval);
+            running = false;
+            startButton.disabled = false;
+            stopButton.disabled = true;
+            resetButton.disabled = false;
+        }
+
+        function resetTimer() {
+            clearInterval(tInterval);
+            running = false;
+            hours = minutes = seconds = 0;
+            display.innerHTML = '00:00:00';
+            startButton.disabled = false;
+            stopButton.disabled = true;
+            resetButton.disabled = true;
+        }
+
+        function getShowTime() {
+            updatedTime = new Date().getTime();
+            difference = updatedTime - startTime;
+
+            hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
+            minutes = Math.floor((difference / (1000 * 60)) % 60);
+            seconds = Math.floor((difference / 1000) % 60);
+
+            hours = (hours < 10) ? '0' + hours : hours;
+            minutes = (minutes < 10) ? '0' + minutes : minutes;
+            seconds = (seconds < 10) ? '0' + seconds : seconds;
+
+            display.innerHTML = hours + ':' + minutes + ':' + seconds;
+        }
+
+        startButton.addEventListener('click', startTimer);
+        stopButton.addEventListener('click', stopTimer);
+        resetButton.addEventListener('click', resetTimer);
+    </script>
+</body>
+
+</html>
